@@ -2,40 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ---------------------------------------------------------
-   THEME 1: "Valve" — 1950s tube-radio console
-   Walnut wood, brass trim, cream Bakelite dial, amber glow.
---------------------------------------------------------- */
+/* =========================================================
+   MOR Radio — global SoundSphere theme bridge
+   Mirror: SoundSphere (Syne display + DM Sans body)
+   - [data-theme="valve"]  = SoundSphere "dark" skin class
+     (black ink on white paper — the mirror default)
+   - [data-theme="pirate"] = SoundSphere "light" skin class
+     (white ink on black paper)
+   Applied globally via <html data-theme> + body.qodef-skin--*
+   ========================================================= */
+
 [data-theme="valve"] {
-  --bg: #211409;
-  --panel: #3a2415;
-  --panel-2: #4a2f1c;
-  --paper: #f0e4c6;
-  --ink: #201206;
-  --accent: #c98a3d;
-  --accent-2: #e7ab54;
-  --line: #6b4a2a;
-  --muted: #b79a72;
-  --font-display: var(--font-fraunces);
-  --font-body: var(--font-work-sans);
+  --bg: #ffffff;
+  --panel: #fafafa;
+  --panel-2: #f0f0f0;
+  --paper: #020202;
+  --ink: #ffffff;
+  --accent: #020202;
+  --accent-2: #333333;
+  --line: rgba(0, 0, 0, 0.1);
+  --muted: #555555;
+  --qode-main-color: #020202;
+  --qode-background-color: #ffffff;
+  --qode-paragraph-color: #000000;
+  --qode-border-color: rgba(0, 0, 0, 0.1);
+  --qode-menu-item-color: #ffffff;
+  --font-display: var(--font-syne);
+  --font-body: var(--font-dm-sans);
 }
 
-/* ---------------------------------------------------------
-   THEME 2: "Pirate" — late-70s underground broadcast zine
-   Manila paper, xerox ink, mustard + rust, cassette hardware.
---------------------------------------------------------- */
 [data-theme="pirate"] {
-  --bg: #17130f;
-  --panel: #1f1a14;
-  --panel-2: #262019;
-  --paper: #e9e0c8;
-  --ink: #18130d;
-  --accent: #cf7a2a;
-  --accent-2: #8a3324;
-  --line: #45392a;
-  --muted: #a89778;
-  --font-display: var(--font-oswald);
-  --font-body: var(--font-space-mono);
+  --bg: #000000;
+  --panel: #141414;
+  --panel-2: #1e1e1e;
+  --paper: #ffffff;
+  --ink: #000000;
+  --accent: #ffffff;
+  --accent-2: #d6d6d6;
+  --line: #313131;
+  --muted: #a8a8a8;
+  --qode-main-color: #ffffff;
+  --qode-background-color: #000000;
+  --qode-paragraph-color: #ffffff;
+  --qode-border-color: #313131;
+  --qode-menu-item-color: #000000;
+  --font-display: var(--font-syne);
+  --font-body: var(--font-dm-sans);
 }
 
 html {
@@ -44,53 +56,490 @@ html {
 }
 
 body {
-  background-color: var(--bg);
-  color: var(--paper);
-  font-family: var(--font-body), ui-sans-serif, system-ui;
+  background-color: var(--qode-background-color, var(--bg));
+  color: var(--qode-paragraph-color, var(--paper));
+  font-family: var(--font-body), "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .font-display {
-  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-family: var(--font-display), Syne, ui-sans-serif, sans-serif;
 }
 
-/* Dial texture used behind hero in valve theme */
-[data-theme="valve"] .grain::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05), transparent 40%);
-  pointer-events: none;
+/* Mirror parity: fullscreen menu hidden until opened */
+.qodef-fullscreen-menu-holder,
+#qodef-fullscreen-area {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.35s ease, visibility 0s 0.35s;
+}
+body.qodef-fullscreen-menu-opened #qodef-fullscreen-area,
+body.qodef-fullscreen-menu-opened .qodef-fullscreen-menu-holder {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+body.qodef-fullscreen-menu-opened {
+  overflow: hidden;
 }
 
-/* Xerox / halftone texture for pirate theme */
-[data-theme="pirate"] .grain::before {
-  content: "";
+/* Mirror parity: search cover hidden until opened */
+.qodef-search-cover-form {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+body.qodef-search-opened .qodef-search-cover-form {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Text marquee (mirror uses JS; CSS fallback keeps it moving globally) */
+@keyframes mor-marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes mor-marquee-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.qodef-text-marquee .qodef-m-content-inner {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: mor-marquee-left 40s linear infinite;
+  will-change: transform;
+}
+.qodef-text-marquee.qodef-direction--right .qodef-m-content-inner {
+  animation-name: mor-marquee-right;
+}
+@media (prefers-reduced-motion: reduce) {
+  .qodef-text-marquee .qodef-m-content-inner {
+    animation: none;
+  }
+}
+
+/* Back-to-top visibility (mirror toggles .qodef--on via JS) */
+#qodef-back-to-top {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+#qodef-back-to-top.qodef--on {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease;
+}
+
+/* Podcast popup modal hidden until opened */
+#qodef-podcast-popup-modal {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+body.qodef-popup-opened #qodef-podcast-popup-modal {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Skip link parity */
+.skip-link.screen-reader-text {
   position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px);
-  mix-blend-mode: multiply;
-  opacity: 0.35;
-  pointer-events: none;
+  left: -9999px;
+  top: 0;
+  z-index: 9999;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+}
+.skip-link.screen-reader-text:focus {
+  left: 0;
+}
+
+/* Giant display heading fluid size */
+.mor-giant {
+  font-size: clamp(3rem, 10vw, 10rem);
+  line-height: 1.1;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .panel-border {
   border: 1px solid var(--line);
 }
 
-.knob {
-  border-radius: 9999px;
-  border: 2px solid var(--line);
-  background: radial-gradient(circle at 35% 30%, var(--panel-2), var(--panel));
+/* =========================================================
+   MOR professional grid system — used by every page.
+   Theme-aware: spacing, cards and grids follow the global
+   SoundSphere skin variables set on [data-theme].
+   ========================================================= */
+.mor-page {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
 }
 
-[data-theme="pirate"] .knob {
-  border-radius: 4px;
-  transform: rotate(-1.5deg);
+.mor-section {
+  padding-block: clamp(2rem, 5vw, 4rem);
+}
+
+.mor-grid {
+  display: grid;
+  gap: var(--mor-gap, 2rem);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+
+.mor-grid-2 {
+  display: grid;
+  gap: var(--mor-gap, 2rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+}
+
+.mor-grid-3 {
+  display: grid;
+  gap: var(--mor-gap, 2rem);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+
+.mor-grid-4 {
+  display: grid;
+  gap: var(--mor-gap, 1.5rem);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+}
+
+@media (max-width: 680px) {
+  .mor-grid,
+  .mor-grid-2,
+  .mor-grid-3,
+  .mor-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mor-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.mor-card:hover {
+  transform: translateY(-4px);
+}
+
+.mor-card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.mor-card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.mor-card-title {
+  font-family: var(--font-display), Syne, sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--paper);
+}
+
+.mor-card-meta {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
+.mor-card-text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.mor-list-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.mor-split {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+@media (max-width: 880px) {
+  .mor-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mirror parity: Elementor backgrounds pointed at test.morradio.co.uk.
+   Serve them from local mirrored media instead (global override). */
+.elementor-2655 .elementor-element.elementor-element-139ce5b::before,
+.elementor-2655
+  .elementor-element.elementor-element-139ce5b
+  > .elementor-motion-effects-container
+  > .elementor-motion-effects-layer::before {
+  background-image: url("/wp-content/uploads/2025/08/iStock-2111623173.jpg") !important;
+}
+.elementor-2655 .elementor-element.elementor-element-1bec1a6::before,
+.elementor-2655
+  .elementor-element.elementor-element-1bec1a6
+  > .elementor-motion-effects-container
+  > .elementor-motion-effects-layer {
+  background-image: url("/wp-content/uploads/2024/09/home-5-png-1.gif") !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+/* =========================================================
+   MOR UI/UX hardening layer — professional interaction,
+   alignment, motion, and spacing applied globally.
+   Transform/opacity-only motion for 60fps; all motion
+   disabled under prefers-reduced-motion.
+   ========================================================= */
+
+/* ---- Base rhythm ---- */
+#qodef-page-content {
+  padding-bottom: clamp(3rem, 7vw, 5rem);
+}
+
+.elementor-2655 {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 7vw, 5.5rem);
+}
+
+.mor-page {
+  text-align: left;
+}
+
+.mor-card-body {
+  text-align: left;
+}
+
+/* Anchored sections clear the fixed header overlay */
+section[id],
+div[id="sub"],
+div[id="donate-form"] {
+  scroll-margin-top: 90px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+/* ---- Links & buttons: fast, consistent feedback ---- */
+a,
+button {
+  transition: color 0.16s ease, background-color 0.16s ease,
+    border-color 0.16s ease, opacity 0.16s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---- Navbar / fullscreen menu hover ---- */
+.qodef-fullscreen-menu-navigation a,
+.qodef-fullscreen-menu a {
+  display: inline-block;
+  padding-block: 0.3rem;
+}
+
+.qodef-fullscreen-menu .qodef-menu-item-text-inner {
+  position: relative;
+  display: inline-block;
+}
+
+.qodef-fullscreen-menu .qodef-menu-item-text-inner::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s ease;
+}
+
+.qodef-fullscreen-menu a:hover .qodef-menu-item-text-inner::after,
+.qodef-fullscreen-menu a:focus-visible .qodef-menu-item-text-inner::after,
+.qodef-fullscreen-menu a.qodef--active .qodef-menu-item-text-inner::after,
+.qodef-fullscreen-menu a[aria-current="page"] .qodef-menu-item-text-inner::after {
+  transform: scaleX(1);
+}
+
+.qodef-fullscreen-menu a.qodef--active,
+.qodef-fullscreen-menu a[aria-current="page"] {
+  opacity: 1;
+}
+
+.qodef-header-logo-link:hover {
+  opacity: 0.85;
+}
+
+#qodef-page-header .wp-block-heading a:hover,
+.qodef-widget-holder a:hover {
+  opacity: 0.75;
+}
+
+/* Theme switch hover */
+.qodef-widget-holder button:hover {
+  filter: brightness(1.12);
+}
+
+/* ---- Buttons ---- */
+.qodef-button:hover,
+.elementor-button:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.qodef-button:active,
+.elementor-button:active {
+  transform: translateY(0);
+}
+
+.qodef-layout--textual .qodef-m-text {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.18s ease;
+}
+
+.qodef-layout--textual:hover .qodef-m-text {
+  border-bottom-color: currentColor;
+}
+
+/* ---- Cards ---- */
+.mor-card {
+  will-change: transform;
+}
+
+.mor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px -18px rgba(0, 0, 0, 0.45);
+}
+
+.mor-card a:hover {
+  opacity: 0.82;
+}
+
+/* ---- Entrance motion (mount only, staggered) ---- */
+@keyframes mor-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mor-grid > *,
+.mor-grid-2 > *,
+.mor-grid-3 > *,
+.mor-grid-4 > *,
+.mor-split > * {
+  animation: mor-rise 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.mor-grid > *:nth-child(2),
+.mor-grid-2 > *:nth-child(2),
+.mor-grid-3 > *:nth-child(2),
+.mor-grid-4 > *:nth-child(2),
+.mor-split > *:nth-child(2) {
+  animation-delay: 0.06s;
+}
+
+.mor-grid > *:nth-child(3),
+.mor-grid-2 > *:nth-child(3),
+.mor-grid-3 > *:nth-child(3),
+.mor-grid-4 > *:nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+.mor-grid > *:nth-child(4),
+.mor-grid-2 > *:nth-child(4),
+.mor-grid-3 > *:nth-child(4),
+.mor-grid-4 > *:nth-child(4) {
+  animation-delay: 0.18s;
+}
+
+.mor-grid > *:nth-child(n + 5),
+.mor-grid-2 > *:nth-child(n + 5),
+.mor-grid-3 > *:nth-child(n + 5),
+.mor-grid-4 > *:nth-child(n + 5) {
+  animation-delay: 0.24s;
+}
+
+/* ---- Media stability (no layout shift) ---- */
+img {
+  height: auto;
+}
+
+audio {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+/* ---- Forms: aligned, comfortable ---- */
+.elementor-field {
+  width: 100%;
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  line-height: 1.5;
+}
+
+.elementor-form-fields-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* ---- Footer rhythm ---- */
+#qodef-page-footer {
+  margin-top: clamp(2rem, 5vw, 4rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mor-grid > *,
+  .mor-grid-2 > *,
+  .mor-grid-3 > *,
+  .mor-grid-4 > *,
+  .mor-split > * {
+    animation: none;
+  }
+  .qodef-text-marquee .qodef-m-content-inner {
+    animation: none;
   }
 }

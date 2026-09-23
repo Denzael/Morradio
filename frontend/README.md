@@ -44,7 +44,11 @@ against the visitor's local time, so no CMS is required to keep it current.
 ## Notes
 
 - The contact form submits via `mailto:` for a zero-backend default —
-  swap the `<form>` action in `app/contact/page.tsx` for a real endpoint
+  swap the `<form>` action in `app/contact-us/page.tsx` for a real endpoint
   when you have one.
-- All copy in `lib/content.ts` is placeholder — replace station name,
-  schedule, shows, and posts with your own.
+- All copy in `lib/content.ts` mirrors www.morradio.co.uk (SoundSphere
+  theme content, schedules, podcasts, seasons, and hosts). The live radio
+  stream is `https://streaming.radio.co/s7e4c28285/listen`.
+- Legacy demo routes redirect in `next.config.js`: `/schedule` →
+  `/our-schedule`, `/shows` → `/podcast-list`, `/contact` → `/contact-us`,
+  `/meet-your-host` → `/meet-your-hosts`.

@@ -1,23 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { station, schedule } from "@/lib/content";
-
-function currentShow() {
-  const now = new Date();
-  const day = schedule[(now.getDay() + 6) % 7]; // Monday-first
-  const slots = day.slots;
-  let live = slots[0];
-  for (const s of slots) {
-    if (s.time <= now.toTimeString().slice(0, 5)) live = s;
-  }
-  return live;
-}
+import { station } from "@/lib/content";
 
 export function Player() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
-  const live = currentShow();
 
   function toggle() {
     const el = audioRef.current;
@@ -34,48 +22,34 @@ export function Player() {
   }
 
   return (
-    <div className="grain relative overflow-hidden rounded-lg panel-border p-6 sm:p-8" style={{ background: "var(--panel)" }}>
-      <audio ref={audioRef} src={station.streamUrl} preload="none" />
-      <div className="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-xs uppercase tracking-widest" style={{ color: "var(--accent-2)" }}>
-            {station.freq} &middot; on air now
-          </p>
-          <p className="font-display mt-1 text-2xl" style={{ color: "var(--paper)" }}>
-            {live.show}
-          </p>
-          <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-            with {live.host}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button
-            onClick={toggle}
-            aria-label={playing ? "Pause stream" : "Play stream"}
-            className="knob flex h-16 w-16 items-center justify-center text-lg"
-            style={{ color: "var(--accent-2)" }}
-          >
-            {playing ? (
-              <span aria-hidden className="flex gap-1">
-                <span className="h-6 w-1.5" style={{ background: "currentColor" }} />
-                <span className="h-6 w-1.5" style={{ background: "currentColor" }} />
-              </span>
-            ) : (
-              <span
-                aria-hidden
-                className="ml-1 h-0 w-0 border-y-[10px] border-l-[16px] border-y-transparent"
-                style={{ borderLeftColor: "currentColor" }}
-              />
-            )}
-          </button>
-          <div>
-            <p className="text-sm font-medium" style={{ color: "var(--paper)" }}>
-              {playing ? "Streaming" : "Tap to tune in"}
-            </p>
-            <p className="text-xs" style={{ color: "var(--muted)" }}>
-              {station.name}
-            </p>
+    <div className="radio_player" data-player-type="shortcode">
+      <div className="qodef-shortcode qodef-m qodef-podcast-player-sc qodef-layout--standard qodef-progress-in-modal--no qodef-skin--light">
+        <div className="qodef-m-player-box">
+          <div className="qodef-e-image">
+            <img src={station.logo} alt="MOR Radio live" width={120} height={120} loading="lazy" />
+          </div>
+          <div className="qodef-m-box-info">
+            <div className="qodef-m-title-area">
+              <span className="qodef-e-title entry-title qodef-podcast-title">Live Stream</span>
+            </div>
+            <div className="qodef-m-box-bottom">
+              <p className="qodef-m-text">{playing ? "On air now" : "Listen Live"}</p>
+            </div>
+          </div>
+          <div className="qodef-m-info-right">
+            <div className="qodef-podcast-player" data-playing-id="live">
+              <audio ref={audioRef} preload="none">
+                <source src={station.streamUrl} type="audio/mpeg" />
+              </audio>
+              <button
+                type="button"
+                onClick={toggle}
+                aria-label={playing ? "Pause live stream" : "Play live stream"}
+                className="qodef-m-play"
+              >
+                <span className="qodef-m-play-inner">{playing ? "Pause" : "Play"}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
