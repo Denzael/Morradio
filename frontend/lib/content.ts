@@ -331,8 +331,8 @@ export const weekdaySchedule: ScheduleDay[] = [
 ];
 
 export const marqueeBands = [
-  { items: ["Sports Spotlight: Game Changers", "Exploring Unknown Realms", "Wellness Waves"], bg: "#FF9859", color: "#FFFFFF" },
-  { items: ["Artistic Expressions", "Mental Health Insights", "Tech Talk: Future Trend"], bg: "#FFFFFF", color: "#000000" },
+  { items: ["Live Time Podcast", "Voices. Vibes. Vision.", "Africa Speaks: The World Listens"], bg: "#FF9859", color: "#FFFFFF" },
+  { items: ["Good Morning Africa", "AfroBeats Brunch", "Drive Time Vibes"], bg: "#FFFFFF", color: "#000000" },
 ];
 
 export const outlineLinks = [

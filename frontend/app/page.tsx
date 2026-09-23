@@ -43,10 +43,10 @@ export default function HomePage() {
   return (
     <>
       {/* Hero — Welcome to MOR Radio */}
-      <div className="elementor-element elementor-element-139ce5b e-con-full qodef-bg-scale-animation e-flex e-con e-parent" data-element_type="container">
+      <div className="elementor-element elementor-element-139ce5b e-con-full qodef-bg-scale-animation e-flex e-con e-parent mor-hero" data-element_type="container">
         <div className="elementor-element elementor-element-39cf185 e-flex e-con-boxed e-con e-child" data-element_type="container">
-          <div className="e-con-inner">
-            <div className="elementor-element elementor-element-10f45d7 e-flex e-con-boxed e-con e-child" data-element_type="container">
+          <div className="e-con-inner mor-hero-inner">
+            <div className="elementor-element elementor-element-10f45d7 e-flex e-con-boxed e-con e-child mor-hero-copy" data-element_type="container">
               <div className="e-con-inner">
                 <div className="elementor-element elementor-element-5d21617 elementor-widget elementor-widget-soundsphere_core_section_title" data-element_type="widget">
                   <div className="elementor-widget-container">
@@ -63,7 +63,7 @@ export default function HomePage() {
                 <SocialIcons />
               </div>
             </div>
-            <div className="elementor-element elementor-element-da91017 e-con-full e-flex e-con e-child" data-element_type="container">
+            <div className="elementor-element elementor-element-da91017 e-con-full e-flex e-con e-child mor-hero-media" data-element_type="container">
               <div className="elementor-element elementor-element-23ebdd2 elementor-widget elementor-widget-shortcode" data-element_type="widget">
                 <div className="elementor-shortcode">
                   <Player />
@@ -75,7 +75,7 @@ export default function HomePage() {
       </div>
 
       {/* What We Do — Voices. Vibes. Vision. */}
-      <div className="elementor-element elementor-element-fa99c21 e-flex e-con-boxed e-con e-parent" data-element_type="container">
+      <div className="elementor-element elementor-element-fa99c21 e-flex e-con-boxed e-con e-parent mor-wwd" data-element_type="container">
         <div className="e-con-inner">
           <div className="elementor-element elementor-element-0b78b13 e-con-full e-flex e-con e-child" data-element_type="container">
             <div className="elementor-element elementor-element-3167f5c e-con-full e-flex e-con e-child" data-element_type="container">

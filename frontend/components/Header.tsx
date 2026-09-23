@@ -139,7 +139,7 @@ export function Header() {
             </div>
           </div>
         </div>
-        <form action="/" className="qodef-search-cover-form" method="get">
+        <form action="/" className="qodef-search-cover-form mor-search-bg" method="get">
           <div className="qodef-m-inner">
             <h5 className="qodef-m-search-title">What are you Looking for?</h5>
             <p className="qodef-m-search-text">
@@ -193,6 +193,21 @@ export function Header() {
               <span className="qodef-menu-opener-label">Explore Podcasts</span>
             </span>
           </button>
+          <Link
+            href="/"
+            className="qodef-mobile-header-logo-link"
+            aria-label="MOR Radio — home"
+            style={{ display: "inline-flex", alignItems: "center" }}
+          >
+            <img
+              src={station.logo}
+              alt="MOR Radio"
+              width={120}
+              height={120}
+              loading="lazy"
+              style={{ height: 44, width: "auto", display: "block" }}
+            />
+          </Link>
           <div className="qodef-widget-holder qodef--one">
             <div className="widget widget_block" data-area="minimal-header-touch">
               <div className="wp-block-qi-blocks-section-title qodef-block-container qodef-widget-block-b1671a33 qodef--has-custom-underline-thick qodef-hide-on--mobile">
